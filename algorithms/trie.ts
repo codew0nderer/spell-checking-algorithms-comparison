@@ -90,6 +90,7 @@ class BBST {
         this.root = this.#insertNodeHelper(this.root, node);
     };
 
+    // find helper method
     #findHelper(root: PrefixNode, value: string): PrefixNode {
         if (root == null) {
             return root;
@@ -104,6 +105,7 @@ class BBST {
         return root;
     }
 
+    // find a value in the tree
     find(value: string) {
         const searchedItem = this.#findHelper(this.root, value);
         return searchedItem;

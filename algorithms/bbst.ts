@@ -1,4 +1,3 @@
-// Create node
 class Node {
     item: string;
     height = 1;
@@ -10,11 +9,9 @@ class Node {
     }
 }
 
-//AVL Tree
 class BBST {
     #root: Node = null;
 
-    //return height of the node
     height(N: Node): number {
         if (N === null) {
             return 0;
@@ -23,7 +20,6 @@ class BBST {
         return N.height;
     }
 
-    //right rotate
     rightRotate(y: Node): Node {
         let x: Node = y.left;
         let T2: Node = x.right;
@@ -35,7 +31,6 @@ class BBST {
         return x;
     }
 
-    //left rotate
     leftRotate(x: Node): Node {
         let y: Node = x.right;
         let T2: Node = y.left;
@@ -47,7 +42,6 @@ class BBST {
         return y;
     }
 
-    // get balance factor of a node
     #getBalanceFactor(N: Node): number {
         if (N == null) {
             return 0;
@@ -56,9 +50,7 @@ class BBST {
         return this.height(N.left) - this.height(N.right);
     }
 
-    // helper function to insert a node
     #insertNodeHelper = (node: Node, item: string) => {
-        // find the position and insert the node
         if (node === null) {
             return new Node(item);
         }
@@ -71,8 +63,6 @@ class BBST {
             return node;
         }
 
-        // update the balance factor of each node
-        // and, balance the tree
         node.height = 1 + Math.max(this.height(node.left), this.height(node.right));
 
         let balanceFactor = this.#getBalanceFactor(node);
@@ -98,13 +88,10 @@ class BBST {
         return node;
     };
 
-    // insert a node
     insertNode = (item: string) => {
-        // console.log(root);
         this.#root = this.#insertNodeHelper(this.#root, item);
     };
 
-    //get node with minimum value
     nodeWithMimumValue = (node: Node): Node => {
         let current = node;
         while (current.left !== null) {
@@ -114,9 +101,7 @@ class BBST {
         return current;
     };
 
-    // delete helper
     #deleteNodeHelper = (root: Node, item: string) => {
-        // find the node to be deleted and remove it
         if (root == null) {
             return root;
         }
@@ -149,7 +134,6 @@ class BBST {
             return root;
         }
 
-        // Update the balance factor of each node and balance the tree
         root.height = Math.max(this.height(root.left), this.height(root.right)) + 1;
 
         let balanceFactor = this.#getBalanceFactor(root);
@@ -191,27 +175,10 @@ class BBST {
         return searchedItem;
     }
 
-    //delete a node
     deleteNode = (item: string) => {
         this.#root = this.#deleteNodeHelper(this.#root, item);
     };
 
-    // print the tree in pre - order
-    preOrder = () => {
-        this.#preOrderHelper(this.#root);
-    };
-
-    #preOrderHelper = (node: Node) => {
-        if (node) {
-            console.log(node.item);
-            this.#preOrderHelper(node.left);
-            this.#preOrderHelper(node.right);
-        }
-    };
-
-    /**
-     * @param {string} wordList
-     */
     buildDictionary(wordList: string) {
         let wordStart = 0;
         for (let i = 0; i < wordList.length; i++) {
@@ -226,9 +193,6 @@ class BBST {
         }
     }
 
-    /**
-     * @param {string} text
-     */
     spellCheck(text: string) {
         let wordStart = 0;
         let spellChecked: string[] = [];

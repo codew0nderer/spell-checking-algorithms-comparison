@@ -1,52 +1,54 @@
 export default class HashMap {
     capacity = 262144; // m = 2^18
-    dictionnary: string[] = new Array(this.capacity);
+    ditionary: string[] = new Array(this.capacity);
     size = 0;
     threshold = 0.5;
-    colisionFaced = 0;
 
+    // Insert a word into the hash table
     insert(word: string) {
         const loadFactor = this.size / this.capacity;
         if (loadFactor >= this.threshold) {
             this.#rehashing();
         }
-        this.#insert_helper(word);
+        this.#insertHelper(word);
     }
 
-    #insert_helper(word: string) {
+    // Insert helper method
+    #insertHelper(word: string) {
         const key = this.#stringToUint32(word);
         const firstHash = this.#firstHash(key);
-        if (this.dictionnary[firstHash] != undefined) {
+        if (this.ditionary[firstHash] != undefined) {
             let i = 1;
             const secondHash = this.#secondHash(key);
             while (true) {
                 const hash = (firstHash + i * secondHash) % this.capacity;
-                if (this.dictionnary[hash] == undefined) {
-                    this.dictionnary[hash] = word;
+                if (this.ditionary[hash] == undefined) {
+                    this.ditionary[hash] = word;
                     this.size++;
                     break;
                 }
                 i++;
             }
         } else {
-            this.dictionnary[firstHash] = word;
+            this.ditionary[firstHash] = word;
             this.size++;
         }
     }
 
+    // Check if a word exists in the hash table
     #find(word: string): boolean {
         let found = true;
         const key = this.#stringToUint32(word);
         const firstHash = this.#firstHash(key);
-        if (this.dictionnary[firstHash] != word) {
+        if (this.ditionary[firstHash] != word) {
             let i = 1;
             const secondHash = this.#secondHash(key);
             while (true) {
                 const hash = (firstHash + i * secondHash) % this.capacity;
-                if (this.dictionnary[hash] == undefined) {
+                if (this.ditionary[hash] == undefined) {
                     found = false;
                     break;
-                } else if (this.dictionnary[hash] == word) {
+                } else if (this.ditionary[hash] == word) {
                     break;
                 }
                 i++;
@@ -55,6 +57,8 @@ export default class HashMap {
         return found;
     }
 
+    // Hash method takes key as input
+    // returns a hash between 0 and m-1 (m is table capacity)
     #firstHash(key: number) {
         const a = (Math.sqrt(5) - 1) / 2;
         const kA = key * a;
@@ -67,38 +71,46 @@ export default class HashMap {
         return hash;
     }
 
+    // Secondary hash method returns the step size value
+    // returned value should bea relatively prime to the table capacity
+    // to loop over all table elements
     #secondHash(key: number) {
-        const debug2 = this.capacity / 2 - 1;
-        let debug3 = key % debug2;
-        if (debug3 < 0) {
-            debug3 += debug2;
+        let hash = (key % this.capacity) / 2 - 1;
+        if (hash < 0) {
+            hash += this.capacity / 2 - 1;
         }
-        const hash = debug3 * 2 + 1;
+        hash = hash * 2 + 1;
 
         return hash;
     }
 
+    // Resize the hash table and rehash its elements
+    // when the threshold is reached
     #rehashing() {
         const newCapacity = this.capacity * 2;
-        const oldDict = this.dictionnary;
+        const oldDict = this.ditionary;
         this.capacity = newCapacity;
-        this.dictionnary = new Array(newCapacity);
+        this.ditionary = new Array(newCapacity);
         this.size = 0;
         for (let i = 0; i < oldDict.length; i++) {
             const word = oldDict[i];
             if (word) {
-                this.#insert_helper(word);
+                this.#insertHelper(word);
             }
         }
     }
 
+    // Convert word to key code
+    // The sum of each char ASCII code multiplied by its position.
     #stringToUint32(word: string) {
+        let g = 3;
         let key = 0;
         for (let i = 0; i < word.length; i++) {
-            key += word.charCodeAt(i) * (i + 1);
+            key = key * g + word.charCodeAt(i);
         }
+        key *= word.length;
 
-        return key;
+        return key % this.capacity;
     }
 
     buildDictionary(wordList: string) {

@@ -20,10 +20,10 @@ let timeTrieDict = 0;
 let timeHashDict = 0;
 let csvFileContentDict = '"naive","bbst","trie","hash"\n';
 for (let i = 0; i < repetition; i++) {
-    timeNaiveDict += calculateTime.call(naive, wordlistTxt, naive.buildDictionary);
-    timeBBSTDict += calculateTime.call(bbst, wordlistTxt, bbst.buildDictionary);
-    timeTrieDict += calculateTime.call(trie, wordlistTxt, trie.buildDictionary);
     timeHashDict += calculateTime.call(hashMap, wordlistTxt, hashMap.buildDictionary);
+    timeTrieDict += calculateTime.call(trie, wordlistTxt, trie.buildDictionary);
+    timeBBSTDict += calculateTime.call(bbst, wordlistTxt, bbst.buildDictionary);
+    timeNaiveDict += calculateTime.call(naive, wordlistTxt, naive.buildDictionary);
 }
 
 let resultNaiveDict = timeNaiveDict / repetition;
@@ -47,10 +47,10 @@ while (textLength <= maxTextLength) {
     const currentText = text.slice(0, textLength);
 
     for (let i = 0; i < repetition; i++) {
-        timeNaiveSpell += calculateTime.call(naive, currentText, naive.spellCheck);
-        timeBBSTSpell += calculateTime.call(bbst, currentText, bbst.spellCheck);
         timeTrieSpell += calculateTime.call(trie, currentText, trie.spellCheck);
         timeHashSpell += calculateTime.call(hashMap, currentText, hashMap.spellCheck);
+        timeBBSTSpell += calculateTime.call(bbst, currentText, bbst.spellCheck);
+        timeNaiveSpell += calculateTime.call(naive, currentText, naive.spellCheck);
     }
 
     let resultNaiveSpell = timeNaiveSpell / repetition;

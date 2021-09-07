@@ -91,7 +91,7 @@ class BBST {
     };
 
     // find helper method
-    #findHelper(root: PrefixNode, value: string): PrefixNode {
+    #findHelper(root: PrefixNode, value: number): PrefixNode {
         if (root == null) {
             return root;
         }
@@ -106,7 +106,7 @@ class BBST {
     }
 
     // find a value in the tree
-    find(value: string) {
+    find(value: number) {
         const searchedItem = this.#findHelper(this.root, value);
         return searchedItem;
     }
@@ -114,35 +114,36 @@ class BBST {
 
 class PrefixNode {
     bbst = new BBST();
-    value: string;
+    value: number;
     left: PrefixNode = null;
     right: PrefixNode = null;
     isEndOfWord: boolean;
     height = 1;
 
-    constructor(value: string, isEndOfWord: boolean) {
+    constructor(value: number, isEndOfWord: boolean) {
         this.value = value;
         this.isEndOfWord = isEndOfWord;
     }
 
-    add(word: string) {
-        let value = word[0];
-        let isEndOfWord = word.length == 1 ? true : false;
-        let node = this.bbst.find(value);
+    add(word: string, charIndex: number = 0) {
+        let charCode = word.charCodeAt(charIndex);
+        let isEndOfWord = word.length == charIndex + 1 ? true : false;
+        let node = this.bbst.find(charCode);
         if (!node) {
-            node = new PrefixNode(value, isEndOfWord);
+            node = new PrefixNode(charCode, isEndOfWord);
             this.bbst.insertNode(node);
         }
 
         if (!isEndOfWord) {
-            node.add(word.substring(1, word.length));
+            charIndex++;
+            node.add(word, charIndex);
         }
     }
 
     contains(word: string, charIndex: number = 0): boolean {
-        let char = word[charIndex];
+        let charCode = word.charCodeAt(charIndex);
         let isEndOfSearchedWord = word.length == charIndex + 1 ? true : false;
-        let node = this.bbst.find(char);
+        let node = this.bbst.find(charCode);
         if (!node) {
             return false;
         }
@@ -169,7 +170,7 @@ export default class Trie {
     }
 
     contains(word: string) {
-        return this.root.contains(word, 0);
+        return this.root.contains(word);
     }
 
     buildDictionary(wordList: string) {

@@ -11,15 +11,14 @@ let trie = new Trie();
 let hashMap = new HashMap();
 const wordlistTxt = fs.readFileSync('words-list.txt', 'utf8');
 const text = fs.readFileSync('book.txt', 'utf8');
-const repetition = 5;
+const repetition = 10;
 
 // Calculate ditionary building time
 let timeNaiveDict = 0;
 let timeBBSTDict = 0;
 let timeTrieDict = 0;
 let timeHashDict = 0;
-let ditionarySize = wordlistTxt.length;
-let csvFileContentDict = '"ditionary size","naive","bbst","trie","hash"\n';
+let csvFileContentDict = '"naive","bbst","trie","hash"\n';
 for (let i = 0; i < repetition; i++) {
     timeNaiveDict += calculateTime.call(naive, wordlistTxt, naive.buildDictionary);
     timeBBSTDict += calculateTime.call(bbst, wordlistTxt, bbst.buildDictionary);
@@ -31,7 +30,7 @@ let resultNaiveDict = timeNaiveDict / repetition;
 let resultBBSTDict = timeBBSTDict / repetition;
 let resultTrieDict = timeTrieDict / repetition;
 let resultHashDict = timeHashDict / repetition;
-csvFileContentDict += `${ditionarySize}, ${resultNaiveDict}, ${resultBBSTDict}, ${resultTrieDict}, ${resultHashDict} \n`;
+csvFileContentDict += `${resultNaiveDict}, ${resultBBSTDict}, ${resultTrieDict}, ${resultHashDict} \n`;
 fs.writeFileSync('result_dict.csv', csvFileContentDict, { flag: 'w+' });
 // End - Calculate ditionary building time
 
@@ -40,7 +39,6 @@ let csvFileContentSpell = '"text size","naive","bbst","trie","hash"\n';
 const initialTextLength = 2000;
 const maxTextLength = text.length;
 var textLength = initialTextLength;
-var textLength = maxTextLength;
 while (textLength <= maxTextLength) {
     let timeNaiveSpell = 0;
     let timeBBSTSpell = 0;
